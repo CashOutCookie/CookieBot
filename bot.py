@@ -1,7 +1,6 @@
 import os
 import discord
 from discord.ext import commands
-from decouple import config
 
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
@@ -21,5 +20,4 @@ async def on_message(message):
         await message.delete()
 
 
-token = config('TOKEN')
-bot.run(token)
+bot.run(TOKEN)
