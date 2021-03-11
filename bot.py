@@ -19,5 +19,5 @@ async def on_message(message):
     if str(message.channel) == '📃todo' and not message.content.startswith("TO-DO"):
         await message.delete()
 
-
-bot.run(TOKEN)
+token = os.environ('TOKEN')
+bot.run(token)
