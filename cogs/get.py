@@ -8,9 +8,9 @@ class GetAPIData(commands.Cog):
         
     @commands.command()
     async def leaderboard(self, ctx):
-        URL = "https://cookieapi-development.up.railway.app/api/leaderboard/"
-        embed = discord.Embed(title="CashoutCookie Leaderboard",
-                             description=f"[Check the full leaderboard here](https://cashoutcookie.com/leaderboard)",
+        URL = "https://cookieapi-development.up.railway.app/api/rank/"
+        embed = discord.Embed(title="CashOutCookie Leaderboard",
+                             description=f"[Check the full leaderboard here](https://cashoutcookie.com/rank)",
                              color=discord.Colour.teal())
 
         async with request("GET", URL, headers={}) as response:
