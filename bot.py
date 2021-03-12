@@ -21,4 +21,4 @@ for filename in os.listdir('./cogs'):
 
 
 token = os.environ.get('TOKEN')
-bot.run("ODE5NTg5NzM5ODkwODY4MjQ1.YEo0bQ.hO5-pT0N7r0UhhJ7khLqE2_vaU8") 
+bot.run(token) 
