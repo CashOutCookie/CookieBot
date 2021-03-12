@@ -53,5 +53,6 @@ class GetAPIData(commands.Cog):
         else:
             await ctx.send("You need to enter a username to view their profile :D\n ```!profile <username>```")
 
+
 def setup(bot):
     bot.add_cog(GetAPIData(bot))
