@@ -40,12 +40,13 @@ class GetAPIData(commands.Cog):
                     accountid = data['accountid']
                     balance = data['balance']
                     date_joined = data['date_joined']
+                    prettierdate = date_joined[:10]
                     emailhash = data['emailhash']
 
                     embed = discord.Embed(title=f"{userprofile}'s profile", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
                     embed.add_field(name='Account Id:', value=accountid, inline=False)
                     embed.add_field(name='balance:', value=balance, inline=False)
-                    embed.add_field(name='date_joined:', value=date_joined, inline=False)
+                    embed.add_field(name='date_joined:', value=prettierdate, inline=False)
                     embed.set_thumbnail(url=f"https://gravatar.com/avatar/{emailhash}?d=mp&size=100")
                     await ctx.send(embed=embed)
                     
