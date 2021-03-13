@@ -31,7 +31,8 @@ class GetAPIData(commands.Cog):
     @commands.command()
     async def profile(self, ctx, *, username=None): 
         if username is not None:
-            URL = f"https://cookieapi-development.up.railway.app/api/profile/{username}/"
+            userprofile = username.lower()
+            URL = f"https://cookieapi-development.up.railway.app/api/profile/{userprofile}/"
             async with request("GET", URL, headers={}) as response:
                 if response.status == 200:
                     data = await response.json()
