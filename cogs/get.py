@@ -8,7 +8,7 @@ class GetAPIData(commands.Cog):
         
     @commands.command()
     async def leaderboard(self, ctx):
-        URL = "https://api.cashoutcookie.conm/api/leaderboard/"
+        URL = "https://api.cashoutcookie.com/api/leaderboard/"
         embed = discord.Embed(title="CashOutCookie Leaderboard",
                              description=f"[Check the full leaderboard here](https://cashoutcookie.com/rank)",
                              color=discord.Colour.teal())
