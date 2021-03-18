@@ -15,6 +15,7 @@ class Commands(commands.Cog):
         embed.add_field(name="?leaderboard", value="Leaderboard for [CashoutCookie](https://cashoutcookie.com/rank)!")
         embed.add_field(name="?profile `<username>`", value="User profile from [CashoutCookie](https://cashoutcookie.com)!", inline=False)
         embed.add_field(name="?emergency", value="Use this command **only** when there is a huge bug/mistake or any major problem, if it's some small bug or issue then directly ping @team", inline=False)
+        embed.add_field(name="?battleship", value="Starts a battleship game!", inline=False)
 
         await ctx.send(embed=embed)
 
