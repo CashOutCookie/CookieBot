@@ -8,7 +8,7 @@ class GetAPIData(commands.Cog):
         
     @commands.command()
     async def leaderboard(self, ctx):
-        URL = "https://cookieapi-development.up.railway.app/api/leaderboard/"
+        URL = "https://api.cashoutcookie.com/api/leaderboard/"
         embed = discord.Embed(title="CashOutCookie Leaderboard",
                              description=f"[Check the full leaderboard here](https://cashoutcookie.com/rank)",
                              color=discord.Colour.teal())
@@ -32,7 +32,7 @@ class GetAPIData(commands.Cog):
     async def profile(self, ctx, *, username=None): 
         if username is not None:
             userprofile = username.lower()
-            URL = f"https://cookieapi-development.up.railway.app/api/profile/{userprofile}/"
+            URL = f"https://api.cashoutcookie.com/api/profile/{userprofile}/"
             async with request("GET", URL, headers={}) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -41,13 +41,13 @@ class GetAPIData(commands.Cog):
                     balance = data['balance']
                     date_joined = data['date_joined']
                     prettierdate = date_joined[:10]
-                    emailhash = data['emailhash']
+                    image = data['image']
 
                     embed = discord.Embed(title=f"{userprofile}'s profile", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
                     embed.add_field(name='Account Id:', value=accountid, inline=False)
                     embed.add_field(name='balance:', value=balance, inline=False)
                     embed.add_field(name='date_joined:', value=prettierdate, inline=False)
-                    embed.set_thumbnail(url=f"https://gravatar.com/avatar/{emailhash}?d=mp&size=100")
+                    embed.set_thumbnail(url=image)
                     await ctx.send(embed=embed)
                     
                 else:
