@@ -66,14 +66,6 @@ class Mod(commands.Cog):
         await ctx.send("Done")
 
 
-    @commands.command()
-    async def match(self, ctx):
-        result = []
-        result = any(item[1] == ctx.author.id for item in self.bot.listcookies)
-        if result == False:
-            await ctx.send("You need to login to start a match.\n Use the command `?login` to login to CashOut Cookie.")
-        else:
-            await ctx.send("nice")
 
 def setup(bot):
     bot.add_cog(Mod(bot))
