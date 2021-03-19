@@ -9,6 +9,8 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="https://cashoutcookie.com | ?help"))
     print("I'm Ready!")
+    bot.listcookies = []
+
 
 async def on_message(message):
     if str(message.channel) == '📃todo' and not message.content.startswith("TO-DO"):
