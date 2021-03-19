@@ -10,7 +10,7 @@ class Auth(commands.Cog):
     @commands.command()
     async def login(self, ctx):
             embed = discord.Embed(title="Login to CashOut Cookie", description="Enter your login credentials for [CashOut Cookie](https://cashoutcookie.com) here, I promise I will keep it a secret!", color=discord.Color.teal())
-            embed.add_field(name="Format", value="```login <YourUsername> <YoutPassword>```")
+            embed.add_field(name="Format", value="```login <YourUsername> <YourPassword>```")
             embed.set_footer(text="Values inside angle brackets (<>) are variables, replace the default values with your credentials and remove the angle brackets.")
             try:
                 await ctx.author.send(embed=embed)
