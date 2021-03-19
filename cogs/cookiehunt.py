@@ -369,6 +369,7 @@ class CookieHunt(commands.Cog):
             announcement = await ctx.send(
                 "**Cookie Hunt**: A new game is about to start!\n"
                 f"Press {ACCEPT} to play against {ctx.author.name}!\n"
+                "**Both users will be charged with a fee of 100 cookies**\n"
                 f"(Cancel the game with {CANCEL})"
             )
             self.waiting.append(ctx.author)
