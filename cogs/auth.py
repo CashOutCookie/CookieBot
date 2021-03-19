@@ -1,6 +1,6 @@
 from aiohttp import request
 from discord.ext import commands
-import discord, json, asyncio
+import discord, json, asyncio, os
 
 
 class Auth(commands.Cog):
@@ -25,11 +25,11 @@ class Auth(commands.Cog):
                 await ctx.author.send("You took too long to login, try again by using the same command (`?login`)")
             if str(msg.content.startswith("login")):
 
-                URL = "http://localhost:8000/api/botlogin/"
+                BOT_LOGIN = os.environ.get("BOT_LOGIN")
                 data = {"username": msg.content.split(" ")[1], "password": msg.content.split(" ")[2]}
                 credentials = json.dumps(data)
                 await ctx.author.send("Trying to log in with the credentials provided...")
-                async with request("POST", URL, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                async with request("POST", BOT_LOGIN, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
                     if response.status == 202:
                         self.bot.listcookies.append((msg.content.split(" ")[1], ctx.author.id))
                         await ctx.author.send(embed=discord.Embed(title="Successfully logged in to CashOut Cookie!", color=discord.Colour.green()))
