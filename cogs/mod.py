@@ -56,21 +56,21 @@ class Mod(commands.Cog):
 
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def cookies(self, ctx):
+    async def cache(self, ctx):
         await ctx.send(self.bot.listcookies)
 
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def clearcookies(self, ctx):
+    async def clearcache(self, ctx):
         self.bot.listcookies.clear()
         await ctx.send("Done")
 
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def addcookies(self, ctx, name:str=None, *,userid:int=None):
+    async def adddata(self, ctx, name:str=None, *,userid:int=None):
         if name is not None and userid is not None:
             self.bot.listcookies.append((name, userid))
-            await ctx.send("Added data for user" + name)
+            await ctx.send("Added data for user " + name)
         elif name is None and userid is not None:
             await ctx.send("You need to enter CashOut Cookie username for the user first.\n Format: ```?addcookies <CashoutCookieUsername> <DiscordUserID>```")
         elif name is not None and userid is None:

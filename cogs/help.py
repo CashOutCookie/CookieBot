@@ -31,9 +31,9 @@ class Help(commands.Cog):
 
         embedstaff = discord.Embed(title="Staff commands", color=discord.Colour.teal())
         embedstaff.add_field(name="?embed `<colour>`", value="Answer the questions sent by me to make an embed! \n *Reacting to 🎨 will give all colour values*", inline=False)
-        embedstaff.add_field(name="?cookies", value="Shows a list of all cookies stored.", inline=False)
-        embedstaff.add_field(name="?clearcookies", value="Clears all cookies.", inline=False)
-        embedstaff.add_field(name="?addcookies <CashOutCookieUsername> <DiscordUserID>", value="Adds cookies for any user which means they won't be required to log in to play CashOut Cookie Games.", inline=False)
+        embedstaff.add_field(name="?cache", value="Shows a list of all cookies stored.", inline=False)
+        embedstaff.add_field(name="?clearcache", value="Clears all cookies.", inline=False)
+        embedstaff.add_field(name="?adddata <CashOutCookieUsername> <DiscordUserID>", value="Adds cookies for any user which means they won't be required to log in to play CashOut Cookie Games.", inline=False)
         embedstaff.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
         embedstaff.set_footer(text="🎨 Embed color values")
 

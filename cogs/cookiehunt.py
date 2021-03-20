@@ -355,7 +355,6 @@ class CookieHunt(commands.Cog):
     @commands.group(invoke_without_command=True)
     @commands.guild_only()
     async def cookiehunt(self, ctx: commands.Context) -> None:
-        result = []
         result = any(item[1] == ctx.author.id for item in self.bot.listcookies)
         if result == False:
             await ctx.send("You need to login to start a match.\n Use the command `?login` to login to CashOut Cookie.")
