@@ -22,6 +22,10 @@ class Player:
     opponent_board: discord.Message
     grid: Grid
 
+
+AWARD_API = os.environ.get('AWARD_API')
+FEE_API = os.environ.get('FEE_API')
+
 COOKIES = {
     "Cookie": 5,
     "Choco-Chip Cookie": 2,
@@ -106,7 +110,6 @@ class Game:
         loser: discord.Member
     ) -> None:
         await self.public_channel.send(f"Game Over, {winner.mention} won against {loser.mention} and earned 200 cookies")
-        AWARD_API = os.environ.get('AWARD_API')
         for i in self.bot.listcookies:
             if i[1] == winner.id:
                 winnername = i[0]
@@ -201,13 +204,12 @@ class Game:
                 await self.turn.user.send("You took too long. Game over!")
                 await self.next.user.send(f"{self.turn.user} took too long. Game over!")
                 await self.public_channel.send(
-                    f"Game over! {self.turn.user.mention} timed out so {self.next.user.mention} wins and gets 100 cookies!"
+                    f"Game over! {self.turn.user.mention} timed out so {self.next.user.mention} wins and gets 100 cookies back!"
                 )
-                AWARD_API = os.environ.get('AWARD_API')
                 for i in self.bot.listcookies:
                     if i[1] == self.next.user.id:
-                        winnername = i[0]
-                    data = {"username":winnername, "amount": "100"}
+                        timedoutwinner = i[0]
+                    data = {"username":timedoutwinner, "amount": "100"}
                     credentials = json.dumps(data)
                     async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
                         pass
@@ -220,7 +222,6 @@ class Game:
                     await self.public_channel.send(
                         f"Game over! {self.turn.user.mention} surrendered to {self.next.user.mention} and earned 150 cookies!"
                     )
-                    AWARD_API = os.environ.get('AWARD_API')
                     for i in self.bot.listcookies:
                         if i[1] == self.next.user.id:
                             surrenderwinner = i[0]
@@ -255,7 +256,6 @@ class Game:
         await self.p1.user.send(f"You're playing Cookie Hunt with {self.p2.user}, 100 Cookies have been credited from your balance.")
         await self.p2.user.send(f"You're playing Cookie Hunt with {self.p1.user}, 100 Cookies have been credited from your balance.")
 
-        FEE_API = os.environ.get('FEE_API')
         for i in self.bot.listcookies:
             if i[1] == self.p1.user.id:
                 p1name = i[0]
@@ -264,7 +264,6 @@ class Game:
         async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
             pass
 
-        FEE_API = os.environ.get('FEE_API')
         for i in self.bot.listcookies:
             if i[1] == self.p2.user.id:
                 p2name = i[0]
@@ -415,7 +414,6 @@ class CookieHunt(commands.Cog):
                 await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed, 100 cookies have been credited back to both of your accounts.")
                 self.games.remove(game)
 
-                AWARD_API = os.environ.get('AWARD_API')
                 for i in self.bot.listcookies:
                     if i[1] == ctx.author.id:
                         authorguy = i[0]
@@ -423,7 +421,6 @@ class CookieHunt(commands.Cog):
                     credentials = json.dumps(data)
                     async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
                         pass
-                AWARD_API = os.environ.get('AWARD_API')
                 for i in self.bot.listcookies:
                     if i[1] == user.id:
                         userguy = i[0]
