@@ -65,6 +65,12 @@ class Mod(commands.Cog):
         self.bot.listcookies.clear()
         await ctx.send("Done")
 
+    @commands.command()
+    @has_permissions(manage_messages=True)
+    async def addcookies(self, ctx, *, name:str=None, userid:int=None):
+        self.bot.listcookies.append((name, userid))
+        await ctx.send("Added data for user" + name)
+
 
 
 def setup(bot):

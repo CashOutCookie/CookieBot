@@ -191,7 +191,7 @@ class Game:
     async def take_turn(self) -> typing.Optional[Square]:
         square = None
         turn_message = await self.turn.user.send(
-            "It's your turn! Type the square you want to aim at, first the letter then number, like this: `A1`\nType **surrender** to surrender yourself."
+            "It's your turn! Type the square you want to aim at, first the letter then number, example: `A1`\nType **surrender** to surrender yourself."
         )
         await self.next.user.send("Their turn", delete_after=2.0)
         while True:
@@ -361,7 +361,7 @@ class CookieHunt(commands.Cog):
             await ctx.send("You need to login to start a match.\n Use the command `?login` to login to CashOut Cookie.")
         else:
             if self.already_playing(ctx.author):
-                return await ctx.send("You're already playing a game!")
+                return await ctx.send("You're already playing a game.")
 
             if ctx.author in self.waiting:
                 return await ctx.send("You've already sent out a request for a player 2")

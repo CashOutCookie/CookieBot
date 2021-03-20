@@ -15,8 +15,9 @@ class Auth(commands.Cog):
 
             try:
                 await ctx.author.send(embed=embed)
+                await ctx.send("Enter your credentials to login to CashOut Cookie in my DMs so that I can log you in here," + ctx.author.name + ".")
             except discord.Forbidden:
-                await ctx.send(f"You need to enable DMs so that i can message you and check your login credentials {ctx.author.name}.")
+                await ctx.send(f"You need to enable your DMs so that I can message you and check your login credentials {ctx.author.name}.")
             
 
             def check(m):
@@ -30,7 +31,7 @@ class Auth(commands.Cog):
                 try:
 
                     BOT_LOGIN = os.environ.get("BOT_LOGIN")
-                    data = {"username": msg.content.split(" ")[1], "password": msg.content.split(" ")[2]}
+                    data = {"username": msg.content.split(" ")[1].lower(), "password": msg.content.split(" ")[2]}
                     credentials = json.dumps(data)
                     await ctx.author.send("Trying to log in with the credentials provided...")
                     async with request("POST", BOT_LOGIN, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
@@ -43,7 +44,7 @@ class Auth(commands.Cog):
                             await ctx.author.send(embed=discord.Embed(title="Username or Password are invalid", description="The username and password combination you entered is invalid, try again with the same command (`?login`)", color=discord.Color.red()))
 
                 except:
-                    await ctx.author.send("You need to use 'login' in the beginning of your message,\n Example: ```login myepicusername mysecretpassword123``` Try again using `?login`.")
+                    await ctx.author.send("You need to use 'login' in the beginning of your message,\n Example: ```login thisismyusername mysecretpassword123``` Try again using `?login`.")
 
 def setup(bot): 
     bot.add_cog(Auth(bot))
