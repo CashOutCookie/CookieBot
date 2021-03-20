@@ -223,8 +223,8 @@ class Game:
                     AWARD_API = os.environ.get('AWARD_API')
                     for i in self.bot.listcookies:
                         if i[1] == self.next.user.id:
-                            winnername = i[0]
-                        data = {"username":winnername, "amount": "150"}
+                            surrenderwinner = i[0]
+                        data = {"username":surrenderwinner, "amount": "150"}
                         credentials = json.dumps(data)
                         async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
                             pass
@@ -408,11 +408,29 @@ class CookieHunt(commands.Cog):
                     f"{ctx.author.mention} {user.mention} "
                     "Game failed. This is likely due to you not having your DMs open. Check and try again."
                 )
+                
                 self.games.remove(game)
             except Exception:
                 # End the game in the event of an unforseen error so the players aren't stuck in a game
-                await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed")
+                await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed, 100 cookies have been credited back to both of your accounts.")
                 self.games.remove(game)
+
+                AWARD_API = os.environ.get('AWARD_API')
+                for i in self.bot.listcookies:
+                    if i[1] == ctx.author.id:
+                        authorguy = i[0]
+                    data = {"username":authorguy, "amount": "100"}
+                    credentials = json.dumps(data)
+                    async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                        pass
+                AWARD_API = os.environ.get('AWARD_API')
+                for i in self.bot.listcookies:
+                    if i[1] == user.id:
+                        userguy = i[0]
+                    data = {"username":userguy, "amount": "100"}
+                    credentials = json.dumps(data)
+                    async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                        pass
                 raise
 
     @cookiehunt.command(name="ships", aliases=["cookies"])
