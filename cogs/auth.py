@@ -62,7 +62,7 @@ class Auth(commands.Cog):
             except asyncio.TimeoutError:
                 await ctx.author.send("You took too long to login, try again by using the same command (`?login`)")
             
-            if str(msg.content.startswith("?loginagain")):
+            if str(msg.content) == "?loginagain":
                 embed = discord.Embed(title="Login to CashOut Cookie", 
                                 description="Enter your login credentials for [CashOut Cookie](https://cashoutcookie.com) here, I promise I will keep it a secret!", 
                                 color=discord.Color.teal())
@@ -100,6 +100,8 @@ class Auth(commands.Cog):
 
                     except:
                         await ctx.author.send("You need to use 'login' in the beginning of your message,\n Example: ```login thisismyusername mysecretpassword123``` Try again using `?login`.")
+
+
 def setup(bot): 
     bot.add_cog(Auth(bot))
 
