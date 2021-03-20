@@ -6,6 +6,9 @@ from aiohttp import request
 
 log = logging.getLogger(__name__)
 
+AWARD_API = os.environ.get("AWARD_API")
+FEE_API =  os.environ.get("FEE_API")
+PROFILE_API = "https://api.cashoutcookie.com/api/profile/"
 
 @dataclass
 class Square:
@@ -21,10 +24,6 @@ class Player:
     board: discord.Message
     opponent_board: discord.Message
     grid: Grid
-
-
-AWARD_API = os.environ.get('AWARD_API')
-FEE_API = os.environ.get('FEE_API')
 
 COOKIES = {
     "Cookie": 5,
@@ -110,13 +109,14 @@ class Game:
         loser: discord.Member
     ) -> None:
         await self.public_channel.send(f"Game Over, {winner.mention} won against {loser.mention} and earned 200 cookies")
+
         for i in self.bot.listcookies:
             if i[1] == winner.id:
                 winnername = i[0]
-        data = {"username":winnername, "amount": "200"}
-        credentials = json.dumps(data)
-        async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-            pass
+                data = {"username": winnername, "amount": "200"}
+                credentials = json.dumps(data)
+                async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                    pass
 
         for player in (self.p1, self.p2):
             grid = self.format_grid(player, COOKIE_EMOJIS)
@@ -206,32 +206,36 @@ class Game:
                 await self.public_channel.send(
                     f"Game over! {self.turn.user.mention} timed out so {self.next.user.mention} wins and gets 100 cookies back!"
                 )
+                
                 for i in self.bot.listcookies:
                     if i[1] == self.next.user.id:
-                        timedoutwinner = i[0]
-                    data = {"username":timedoutwinner, "amount": "100"}
-                    credentials = json.dumps(data)
-                    async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-                        pass
-
-                self.gameover = True
-                break
-            else:
-                if self.surrender:
-                    await self.next.user.send(f"{self.turn.user} surrendered. Game over!")
-                    await self.public_channel.send(
-                        f"Game over! {self.turn.user.mention} surrendered to {self.next.user.mention} and earned 150 cookies!"
-                    )
-                    for i in self.bot.listcookies:
-                        if i[1] == self.next.user.id:
-                            surrenderwinner = i[0]
-                        data = {"username":surrenderwinner, "amount": "150"}
+                        surrenderwinner = i[0]
+                        data = {"username": surrenderwinner, "amount": "100"}
                         credentials = json.dumps(data)
                         async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
                             pass
 
+                self.gameover = True
+                break
+
+            else:
+                if self.surrender:
+                    await self.next.user.send(f"{self.turn.user} surrendered. Game over!")
+                    await self.public_channel.send(
+                        f"Game over! {self.turn.user.mention} surrendered to {self.next.user.mention} thus {self.next.user.name} earns 150 cookies!"
+                    )
+                    
+                    for i in self.bot.listcookies:
+                        if i[1] == self.next.user.id:
+                            winnertimeout = i[0]
+                            data = {"username": winnertimeout, "amount": "150"}
+                            credentials = json.dumps(data)
+                            async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                                pass
+
                     self.gameover = True
                     break
+
                 square = self.get_square(self.next.grid, self.match.string)
                 if square.aimed:
                     await self.turn.user.send("You've already aimed at this square.", delete_after=3.0)
@@ -253,24 +257,25 @@ class Game:
                 await self.game_over(winner=self.turn.user, loser=self.next.user)
 
     async def start_game(self) -> None:
-        await self.p1.user.send(f"You're playing Cookie Hunt with {self.p2.user}, 100 Cookies have been credited from your balance.")
-        await self.p2.user.send(f"You're playing Cookie Hunt with {self.p1.user}, 100 Cookies have been credited from your balance.")
+        await self.p1.user.send(f"You're playing Cookie Hunt with {self.p2.user}, 100 Cookies have been debited from your balance.")
+        await self.p2.user.send(f"You're playing Cookie Hunt with {self.p1.user}, 100 Cookies have been debited from your balance.")
 
+    
         for i in self.bot.listcookies:
             if i[1] == self.p1.user.id:
                 p1name = i[0]
-        data = {"username":p1name, "amount": "100"}
-        credentials = json.dumps(data)
-        async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-            pass
+                data = {"username":p1name, "amount": "100"}
+                credentials = json.dumps(data)
+                async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                    pass
 
         for i in self.bot.listcookies:
             if i[1] == self.p2.user.id:
                 p2name = i[0]
-        data = {"username":p2name, "amount": "100"}
-        credentials = json.dumps(data)
-        async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-            pass
+                data = {"username":p2name, "amount": "100"}
+                credentials = json.dumps(data)
+                async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                    pass
 
         alert_messages = []
 
@@ -355,72 +360,103 @@ class CookieHunt(commands.Cog):
     @commands.guild_only()
     async def cookiehunt(self, ctx: commands.Context) -> None:
         result = any(item[1] == ctx.author.id for item in self.bot.listcookies)
+
         if result == False:
             await ctx.send("You need to login to start a match.\n Use the command `?login` to login to CashOut Cookie.")
+
         else:
-            if self.already_playing(ctx.author):
-                return await ctx.send("You're already playing a game.")
+            await ctx.send("Checking balance...")
+            for i in self.bot.listcookies:
+                    if i[1] == ctx.author.id:
+                        cmdauthor = i[0]
+                        async with request("GET", PROFILE_API+cmdauthor) as response:
+                            if response.status == 200:
+                                data = await response.json()
+                                if 100 > data['balance']:
+                                    await ctx.send(f"You don't have enough cookies {ctx.author.name}")
+                                else:
 
-            if ctx.author in self.waiting:
-                return await ctx.send("You've already sent out a request for a player 2")
+                                    if self.already_playing(ctx.author):
+                                        return await ctx.send("You're already playing a game.")
 
-            announcement = await ctx.send(
-                "**Cookie Hunt**: A new game is about to start!\n"
-                f"Press {ACCEPT} to play against {ctx.author.name}!\n"
-                f"(Cancel the game with {CANCEL})"
-            )
-            self.waiting.append(ctx.author)
-            await announcement.add_reaction(ACCEPT)
-            await announcement.add_reaction(CANCEL)
+                                    if ctx.author in self.waiting:
+                                        return await ctx.send("You've already sent out a request for a player 2")
 
-            try:
-                reaction, user = await self.bot.wait_for(
-                    "reaction_add",
-                    check=partial(self.predicate, ctx, announcement),
-                    timeout=180.0
-                )
-            except asyncio.TimeoutError:
-                self.waiting.remove(ctx.author)
-                await announcement.delete()
-                return await ctx.send(f"{ctx.author.mention} Seems like there's no one here to play :(")
+                                    announcement = await ctx.send(
+                                        "**Cookie Hunt**: A new game is about to start!\n"
+                                        f"Press {ACCEPT} to play against {ctx.author.name}!\n"
+                                        "**100 cookies will be debited from both players accounts**\n"
+                                        f"(Cancel the game with {CANCEL})"
+                                    )
+                                    self.waiting.append(ctx.author)
+                                    await announcement.add_reaction(ACCEPT)
+                                    await announcement.add_reaction(CANCEL)
 
-            if str(reaction.emoji) == CANCEL:
-                self.waiting.remove(ctx.author)
-                await announcement.delete()
-                return await ctx.send(f"Game cancelled {ctx.author.name}.")
+                                    try:
+                                        reaction, user = await self.bot.wait_for(
+                                            "reaction_add",
+                                            check=partial(self.predicate, ctx, announcement),
+                                            timeout=180.0
+                                        )
+                                    except asyncio.TimeoutError:
+                                        self.waiting.remove(ctx.author)
+                                        await announcement.delete()
+                                        return await ctx.send(f"{ctx.author.mention} Seems like there's no one here to play :(")
 
-            await announcement.delete()
-            self.waiting.remove(ctx.author)
-            if self.already_playing(ctx.author):
-                return
-            try:
-                game = Game(self.bot, ctx.channel, ctx.author, user)
-                result = any(item[1] == user.id for item in self.bot.listcookies)
-                if result == False:
-                    await ctx.send(f"You need to login to play {user.mention}.\n Use the command `?login` to login to CashOut Cookie.\n {ctx.author.mention} Game got cancelled because {user.name} tried to play without logging in, Blame him not me lel, anyways you gotta start again.")
-                else:
-                    self.games.append(game)
-                    await game.start_game()
-                    self.games.remove(game)
-            except discord.Forbidden :
-                await ctx.send(
-                    f"{ctx.author.mention} {user.mention} "
-                    "Game failed. This is likely due to you not having your DMs open. Check and try again."
-                )
-                
-                self.games.remove(game)
-            except Exception:
-                # End the game in the event of an unforseen error so the players aren't stuck in a game
-                await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred,  game failed. This is very weird :face_with_raised_eyebrow:")
-                self.games.remove(game)
-                raise
+                                    if str(reaction.emoji) == CANCEL:
+                                        self.waiting.remove(ctx.author)
+                                        await announcement.delete()
+                                        return await ctx.send(f"Game cancelled {ctx.author.name}.")
 
-    @cookiehunt.command(name="ships", aliases=["cookies"])
-    async def battleship_ships(self, ctx: commands.Context) -> None:
-        embed = discord.Embed(colour=discord.Colour.blue())
-        embed.add_field(name="Name", value="\n".join(COOKIES))
-        embed.add_field(name="Size", value="\n".join(str(size) for size in COOKIES.values()))
-        await ctx.send(embed=embed)
+                                    await announcement.delete()
+                                    self.waiting.remove(ctx.author)
+                                    if self.already_playing(ctx.author):
+                                        return
+                                    try:
+                                        game = Game(self.bot, ctx.channel, ctx.author, user)
+                                        result = any(item[1] == user.id for item in self.bot.listcookies)
+                                        if result == False:
+                                            await ctx.send(f"You need to login to play {user.mention}.\n Use the command `?login` to login to CashOut Cookie.\n {ctx.author.mention} Game got cancelled because {user.name} tried to play without logging in, Blame him not me lel, anyways you gotta start again.")
+                                        else:
+                                            for i in self.bot.listcookies:
+                                                if i[1] == user.id:
+                                                    reactor = i[0]
+                                                    async with request("GET", PROFILE_API+reactor) as response:
+                                                        if response.status == 200:
+                                                            data = await response.json()
+                                                            if 100 > data['balance']: 
+                                                                await ctx.send(f"{user.name} you don't have enough cookies to play against them lol, Start again {ctx.author.mention} the game got cancelled because someone not having enough cookies tried to play.")
+                                                            else:                                    
+                                                                self.games.append(game)
+                                                                await game.start_game()
+                                                                self.games.remove(game)
+                                    except discord.Forbidden :
+                                        await ctx.send(
+                                            f"{ctx.author.mention} {user.mention} "
+                                            "Game failed. This is likely due to you not having your DMs open. Check and try again."
+                                        )
+                                        self.games.remove(game)
+                                    except Exception:
+                                        # End the game in the event of an unforseen error so the players aren't stuck in a game
+                                        await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed\n 100 cookies have been credited back to both of your accounts.")
+                                        self.games.remove(game)
+
+                                        for i in self.bot.listcookies:
+                                            if i[1] == ctx.author.id:
+                                                authorguy = i[0]
+                                                data = {"username": authorguy, "amount": "100"}
+                                                credentials = json.dumps(data)
+                                                async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                                                    pass
+
+                                        for i in self.bot.listcookies:
+                                            if i[1] == user.id:
+                                                userguy = i[0]
+                                                data = {"username": userguy, "amount": "100"}
+                                                credentials = json.dumps(data)
+                                                async with request("POST", FEE_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
+                                                    pass
+                                            raise
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(CookieHunt(bot))

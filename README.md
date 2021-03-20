@@ -19,6 +19,7 @@ Install requirements.
 ```
 pip install -r requirements.txt
 ```
+### You may delete the git folder
 
 ## Invitation
 [Invite the bot from here](https://discord.com/api/oauth2/authorize?client_id=819589739890868245&permissions=8&scope=bot)
