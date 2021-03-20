@@ -28,7 +28,7 @@ FEE_API = os.environ.get('FEE_API')
 
 COOKIES = {
     "Cookie": 5,
-    "Choco-Chip Cookie": 2,
+    "Choco-Chip Cookie": 3,
 }
 
 COOKIE_EMOJIS = {
@@ -244,7 +244,7 @@ class Game:
         await self.turn.user.send("Found!", delete_after=2.0)
         alert_messages.append(await self.next.user.send("Found!"))
         if self.check_sink(self.next.grid, square.cookie):
-            await self.turn.user.send(f"You've found their {square.cookie} cookie!", delete_after=3.0)
+            await self.turn.user.send(f"You've found their {square.cookie} !", delete_after=3.0)
             alert_messages.append(await self.next.user.send(f"Oh no! Your {square.cookie} was found !"))
             if self.check_gameover(self.next.grid):
                 await self.turn.user.send("You win!")
@@ -411,23 +411,8 @@ class CookieHunt(commands.Cog):
                 self.games.remove(game)
             except Exception:
                 # End the game in the event of an unforseen error so the players aren't stuck in a game
-                await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed, 100 cookies have been credited back to both of your accounts.")
+                await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred,  game failed. This is very weird :face_with_raised_eyebrow:")
                 self.games.remove(game)
-
-                for i in self.bot.listcookies:
-                    if i[1] == ctx.author.id:
-                        authorguy = i[0]
-                    data = {"username":authorguy, "amount": "100"}
-                    credentials = json.dumps(data)
-                    async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-                        pass
-                for i in self.bot.listcookies:
-                    if i[1] == user.id:
-                        userguy = i[0]
-                    data = {"username":userguy, "amount": "100"}
-                    credentials = json.dumps(data)
-                    async with request("POST", AWARD_API, data=credentials, headers={'Content-type':'application/json', 'Accept':'application/json'}) as response:
-                        pass
                 raise
 
     @cookiehunt.command(name="ships", aliases=["cookies"])
