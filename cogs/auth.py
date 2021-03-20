@@ -29,7 +29,7 @@ class Auth(commands.Cog):
             if str(msg.content.startswith("login")):
                 try:
 
-                    BOT_LOGIN = "http://localhost:8000/api/botlogin/"
+                    BOT_LOGIN = os.environ.get("BOT_LOGIN")
                     data = {"username": msg.content.split(" ")[1], "password": msg.content.split(" ")[2]}
                     credentials = json.dumps(data)
                     await ctx.author.send("Trying to log in with the credentials provided...")
