@@ -9,8 +9,8 @@ class Help(commands.Cog):
     async def help(self, ctx):
         embed = discord.Embed(title="Help is here!", description=f"Characters inside `<>` are variables, enter the variable without `<>`", color=discord.Color.purple())
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
-        embed.add_field(name="?source", value="My Github source code!")
-        embed.add_field(name="?leaderboard", value="Leaderboard for [CashoutCookie](https://cashoutcookie.com/rank)!")
+        embed.add_field(name="?source", value="My Github source code!", inline=False)
+        embed.add_field(name="?leaderboard", value="Leaderboard for [CashoutCookie](https://cashoutcookie.com/rank)!", inline=False)
         embed.add_field(name="?profile `<username>`", value="User profile from [CashoutCookie](https://cashoutcookie.com)!", inline=False)
         embed.add_field(name="?login", value="Use the command to login to [CashoutCookie](https://cashoutcookie.com) here!", inline=False)
         embed.add_field(name="?emergency", value="Use this command **only** when there is a huge bug/mistake or any major problem, if it's some small bug or issue then directly ping @team", inline=False)
@@ -34,7 +34,7 @@ class Help(commands.Cog):
         embedstaff.add_field(name="?cookies", value="Shows a list of all cookies stored.", inline=False)
         embedstaff.add_field(name="?clearcookies", value="Clears all cookies.", inline=False)
         embedstaff.add_field(name="?addcookies <CashOutCookieUsername> <DiscordUserID>", value="Adds cookies for any user which means they won't be required to log in to play CashOut Cookie Games.", inline=False)
-        gamesembed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
+        embedstaff.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
         embedstaff.set_footer(text="🎨 Embed color values")
 
 

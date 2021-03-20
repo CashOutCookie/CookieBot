@@ -72,11 +72,11 @@ class Mod(commands.Cog):
             self.bot.listcookies.append((name, userid))
             await ctx.send("Added data for user" + name)
         elif name is None and userid is not None:
-            await ctx.send("You need to enter CashOut Cookie username for the user first.\n Format: ```?addcookies <CashoutCookieUsername> <DiscordUserID>")
+            await ctx.send("You need to enter CashOut Cookie username for the user first.\n Format: ```?addcookies <CashoutCookieUsername> <DiscordUserID>```")
         elif name is not None and userid is None:
-            await ctx.send("You need to enter the user's id also.\n Format: ```?addcookies <CashOutCookieUsername> <DiscordUserID>")
+            await ctx.send("You need to enter the user's id also.\n Format: ```?addcookies <CashOutCookieUsername> <DiscordUserID>```")
         else:
-            await ctx.send("You need to specify the user's CashOut Cookie username and Discord User Id.\n Format: ```?addcookie <CashOutCookieUsername> <DiscordUserID>")
+            await ctx.send("You need to specify the user's CashOut Cookie username and Discord User Id.\n Format: ```?addcookie <CashOutCookieUsername> <DiscordUserID>```")
         
 
 
