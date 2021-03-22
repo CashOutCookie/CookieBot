@@ -1,4 +1,5 @@
 import discord
+import datetime
 from aiohttp import request
 from discord.ext import commands
 
@@ -25,7 +26,7 @@ class GetAPIData(commands.Cog):
                 await ctx.send(embed=embed)
 
             else:
-                await ctx.send(f"API returned a {response.status} reponse")
+                await ctx.send(f"Something went wrong, API returned a {response.status} reponse")
 
 
     @commands.command()
@@ -39,14 +40,21 @@ class GetAPIData(commands.Cog):
 
                     accountid = data['accountid']
                     balance = data['balance']
-                    date_joined = data['date_joined']
-                    prettierdate = date_joined[:10]
                     image = data['image']
+                    date_joined = data['date_joined']
 
-                    embed = discord.Embed(title=f"{userprofile}'s profile", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
+                    monthint = date_joined.split('-')[1]    
+                    dayint = date_joined.split('-')[2]
+
+                    year = date_joined.split('-')[0]
+                    day = dayint.split("T")[0]
+                    month = datetime.date(1900, int(monthint), 1).strftime('%B')
+
+
+                    embed = discord.Embed(title=f"{userprofile.upper()}'s PROFILE", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
                     embed.add_field(name='Account Id:', value=accountid, inline=False)
-                    embed.add_field(name='balance:', value=balance, inline=False)
-                    embed.add_field(name='date_joined:', value=prettierdate, inline=False)
+                    embed.add_field(name='Balance:', value=balance, inline=False)
+                    embed.add_field(name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
                     embed.set_thumbnail(url=image)
                     await ctx.send(embed=embed)
                     

@@ -373,7 +373,7 @@ class CookieHunt(commands.Cog):
                             if response.status == 200:
                                 data = await response.json()
                                 if 100 > data['balance']:
-                                    await ctx.send(f"You don't have enough cookies {ctx.author.name}")
+                                    await ctx.send(f"You don't have enough cookies {ctx.author.name}\n Check your balance from your profile here https://cashoutcookie.com/profile/"+ cmdauthor)
                                 else:
 
                                     if self.already_playing(ctx.author):
