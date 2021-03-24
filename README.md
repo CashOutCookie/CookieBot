@@ -4,22 +4,24 @@ Discord Bot for [CashOut Cookie](https://cashoutcookie.com)
 
 ## Installation
 
-Start a virtual environment.
+1. Create a directory.
 
-```bash
-virtualenv env
+2. Start a virtual environment.
+```
+bash virtualenv env
 ```
 
-Clone the repository
-
+3. Clone the repository
 ```
 git clone https://github.com/CashOutCookie/CookieBot.git
 ```
-Install requirements.
+
+4. Install requirements.
 ```
 pip install -r requirements.txt
 ```
-### You may delete the git folder
+
+You may delete the git folder now
 
 ## Invitation
 [Invite the bot from here](https://discord.com/api/oauth2/authorize?client_id=819589739890868245&permissions=8&scope=bot)

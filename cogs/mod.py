@@ -1,7 +1,11 @@
-import discord
-import asyncio
+from pymongo import MongoClient
+import discord, asyncio, os
 from discord.ext import commands
 from discord.ext.commands import has_permissions
+
+
+client = MongoClient(os.environ.get("MONGO"))
+db = client['discord']
 
 class Mod(commands.Cog):
     def __init__(self, bot):
@@ -59,27 +63,43 @@ class Mod(commands.Cog):
     async def cache(self, ctx):
         await ctx.send(self.bot.listcookies)
 
-    @commands.command()
-    @has_permissions(manage_messages=True)
-    async def clearcache(self, ctx):
-        self.bot.listcookies.clear()
-        await ctx.send("Done")
+
 
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def adddata(self, ctx, name:str=None, *,userid:int=None):
-        if name is not None and userid is not None:
-            self.bot.listcookies.append((name, userid))
-            await ctx.send("Added data for user " + name)
-        elif name is None and userid is not None:
-            await ctx.send("You need to enter CashOut Cookie username for the user first.\n Format: ```?addcookies <CashoutCookieUsername> <DiscordUserID>```")
-        elif name is not None and userid is None:
-            await ctx.send("You need to enter the user's id also.\n Format: ```?addcookies <CashOutCookieUsername> <DiscordUserID>```")
+    async def removeuser(self, ctx, user=None):
+        if user is None:
+            await ctx.send("You need to define the user to log them out.\n Format: ```?removeuser <cashoutcookieusername>```")
         else:
-            await ctx.send("You need to specify the user's CashOut Cookie username and Discord User Id.\n Format: ```?addcookie <CashOutCookieUsername> <DiscordUserID>```")
+            self.bot.listcookies.clear()
+            coll = db[str(ctx.author.guild.id)]
+            userdata = { "username": user }
+            coll.delete_one(userdata)
+            await ctx.send(embed=discord.Embed(description=f"Done, removed auth cookies for [{user}](https://cashoutcookie.com/profile/{user})", color=discord.Color.green()))
+
+
+
+    @commands.command()
+    @has_permissions(manage_messages=True)
+    async def adduser(self, ctx, name:str=None, *,userid:int=None):
+        if name is not None and userid is not None:
+            user = {"discordId": userid, "username": name}
+            collection = db[str(ctx.author.guild.id)]
+            collection.insert_one(user)
+            await ctx.send("Added data for user " + name)
+
+        elif name is None and userid is not None:
+            await ctx.send("You need to enter CashOut Cookie username for the user first.\n Format: ```?adduser <cashoutcookieusername> <discorduserid>```")
+        elif name is not None and userid is None:
+            await ctx.send("You need to enter the user's id also.\n Format: ```?adduser <cashoutcookieusername> <discorduserid>```")
+        else:
+            await ctx.send("You need to specify the user's CashOut Cookie username and Discord User Id.\n Format: ```?adduser <cashoutcookieusername> <discorduserid>```")
+
+
+
+async def on_message(message):
+    if str(message.channel) == '📃todo' and not message.content.startswith("TO-DO"):
+        await message.delete()
         
-
-
-
 def setup(bot):
     bot.add_cog(Mod(bot))

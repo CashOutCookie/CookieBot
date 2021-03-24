@@ -1,26 +1,37 @@
-import os
-import discord
-from discord.ext import commands
+import os, discord
+from pymongo import MongoClient
+from discord.ext import commands, tasks
 
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
+
+client = MongoClient(os.environ.get("MONGO"))
+db = client['discord']
 
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="https://cashoutcookie.com | ?help"))
     print("I'm Ready!")
-    bot.listcookies = []
 
 
-async def on_message(message):
-    if str(message.channel) == '📃todo' and not message.content.startswith("TO-DO"):
-        await message.delete()
 
+@tasks.loop(seconds = 2)
+async def myLoop():
+    bot.listcookies = {}
+    for server in db.list_collection_names():
+        collection = db[server]
+        cookieList = {}
+        for user in collection.find():
+            cookieList[user["discordId"]] = user["username"]
+        bot.listcookies[server] = cookieList
+
+
+myLoop.start()
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
-
+        
 
 token = os.environ.get('TOKEN')
-bot.run(token) 
+bot.run(token)
