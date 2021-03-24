@@ -26,7 +26,7 @@ class GetAPIData(commands.Cog):
                 await ctx.send(embed=embed)
 
             else:
-                await ctx.send(f"Something went wrong, API returned a {response.status} reponse")
+                await ctx.send(f"Something went wrong, API returned a {response.status} response 😶")
 
 
     @commands.command()
@@ -60,8 +60,38 @@ class GetAPIData(commands.Cog):
                     
                 else:
                     await ctx.send(f"The user **'{username}'** doesn't exist.")
-        else:
-            await ctx.send("You need to enter a username to view their profile :D\n ```!profile <username>```")
+
+        elif username is None:
+            userprofile = self.bot.listcookies.get(str(ctx.author.guild.id)).get(ctx.author.id)
+
+            URL = f"https://api.cashoutcookie.com/api/profile/{userprofile}/"
+            async with request("GET", URL, headers={}) as response:
+                if response.status == 200:
+                    data = await response.json()
+
+                    accountid = data['accountid']
+                    balance = data['balance']
+                    image = data['image']
+                    date_joined = data['date_joined']
+
+                    monthint = date_joined.split('-')[1]    
+                    dayint = date_joined.split('-')[2]
+
+                    year = date_joined.split('-')[0]
+                    day = dayint.split("T")[0]
+                    month = datetime.date(1900, int(monthint), 1).strftime('%B')
+
+
+                    embed = discord.Embed(title=f"Here is your profile, {ctx.author.name}", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
+                    embed.add_field(name='Account Id:', value=accountid, inline=False)
+                    embed.add_field(name='Balance:', value=balance, inline=False)
+                    embed.add_field(name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
+                    embed.set_thumbnail(url=image)
+                    await ctx.send(embed=embed)
+                    
+                else:
+                    await ctx.send(f"You need to enter the username of user to view their profile. Format:```?profile <username>```\nYou aren't logged in right now, use the command `?login` to login yourself and view your profile on the command `?profile` without entering your username")
+
 
 
 def setup(bot):

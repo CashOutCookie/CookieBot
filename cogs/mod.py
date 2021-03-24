@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import discord, asyncio, os
+import discord, asyncio, os, json
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 
@@ -60,8 +60,19 @@ class Mod(commands.Cog):
 
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def cache(self, ctx):
-        await ctx.send(self.bot.listcookies)
+    async def cache(self, ctx, serverid=None):
+        if serverid is None:
+            await ctx.send(embed=discord.Embed(description=json.dumps(self.bot.listcookies, indent=1), color=discord.Color.teal()))
+
+        else:
+            try:
+                embed = discord.Embed(title=f"Auth cookies for the server: __{self.bot.get_guild(int(serverid))}__", color=discord.Color.magenta())
+                data = self.bot.listcookies.get(str(serverid))
+                for i in data:
+                    embed.add_field(name=data[i], value=f"UserID: **{i}**", inline=False)
+                await ctx.send(embed=embed)
+            except Exception:
+                await ctx.send("The server doesn't have any users logged in.")
 
 
 
@@ -71,7 +82,6 @@ class Mod(commands.Cog):
         if user is None:
             await ctx.send("You need to define the user to log them out.\n Format: ```?removeuser <cashoutcookieusername>```")
         else:
-            self.bot.listcookies.clear()
             coll = db[str(ctx.author.guild.id)]
             userdata = { "username": user }
             coll.delete_one(userdata)

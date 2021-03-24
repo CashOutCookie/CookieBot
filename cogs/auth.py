@@ -14,7 +14,7 @@ class Auth(commands.Cog):
     @commands.command()
     async def login(self, ctx):
         if(self.bot.listcookies.get(str(ctx.author.guild.id)) != None and (ctx.author.id in self.bot.listcookies.get(str(ctx.author.guild.id)).keys())):
-            await ctx.send(f"You are already logged in, {ctx.author.name}.")
+            await ctx.send(f"You are already logged in, {ctx.author.name} :eyes:")
 
         else:
             embed = discord.Embed(title="Login to CashOut Cookie", 
@@ -25,9 +25,9 @@ class Auth(commands.Cog):
 
             try:
                 await ctx.author.send(embed=embed)
-                await ctx.send(f"Enter your credentials to login to CashOutCookie in my DMs so that I can log you in here, {ctx.author.name}.")
+                await ctx.send(f"Enter your credentials to login to CashOutCookie in my DMs so that I can log you in here, {ctx.author.name} :D")
             except discord.Forbidden:
-                await ctx.send(f"You need to enable your DMs so that I can message you and check your login credentials {ctx.author.name}.")
+                await ctx.send(f"You need to enable your DMs so that I can message you and check your login credentials {ctx.author.name} 🤠")
             
 
             def check(m):
@@ -35,7 +35,7 @@ class Auth(commands.Cog):
             try:
                 logindata = await self.bot.wait_for('message', check=check, timeout=60.0)
             except asyncio.TimeoutError:
-                await ctx.author.send("You took too long to login, try again by using the same command (`?login`)")
+                await ctx.author.send("You took too long to login ⏲, try again by using the same command (`?login`)")
 
             if str(logindata.content.startswith("login")):
                 BOT_LOGIN = os.environ.get("BOT_LOGIN")
@@ -50,7 +50,7 @@ class Auth(commands.Cog):
                             if(user["username"] == data["username"]):
                                 loggedIn = True
                         if (loggedIn):
-                            await ctx.author.send(embed=discord.Embed(title="Don't try to cheat. You have already logged in this server.", color=discord.Colour.red()))
+                            await ctx.author.send(embed=discord.Embed(description="You have already logged into the server, don't try to cheat :eyes:", color=discord.Colour.red()))
                         else:                            
                             user = {"discordId":ctx.author.id,"username":data["username"]}
                             collection.insert_one(user)
@@ -62,6 +62,13 @@ class Auth(commands.Cog):
 
             else:
                 await ctx.author.send("You need to use 'login' in the beginning of your message,\n Example: ```login thisismyusername mysecretpassword123``` Try again using `?login`.")
+
+    @commands.command()
+    async def logout(self, ctx):
+        coll = db[str(ctx.author.guild.id)]
+        userdata = { "discordId": ctx.author.id }
+        coll.delete_one(userdata)
+        await ctx.send(embed=discord.Embed(description=f"Done, successfully logged you out of this server from [CashOut Cookie](https://cashoutcookie.com), {ctx.author.name} :)", color=discord.Color.green()))
 
 
 

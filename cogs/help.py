@@ -11,8 +11,9 @@ class Help(commands.Cog):
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
         embed.add_field(name="?source", value="My Github source code!", inline=False)
         embed.add_field(name="?leaderboard", value="Leaderboard for [CashoutCookie](https://cashoutcookie.com/rank)!", inline=False)
-        embed.add_field(name="?profile `<username>`", value="User profile from [CashoutCookie](https://cashoutcookie.com)!", inline=False)
+        embed.add_field(name="?profile `<username>`", value="User profile from [CashoutCookie](https://cashoutcookie.com)!\n *While logged in, just entering `?profile` without any username will show you your profile.*", inline=False)
         embed.add_field(name="?login", value="Use the command to login to [CashoutCookie](https://cashoutcookie.com) here!", inline=False)
+        embed.add_field(name="?logout", value="Use the command to logout of [CashoutCookie](https://cashoutcookie.com) here!", inline=False)
         embed.add_field(name="?emergency", value="Use this command **only** when there is a huge bug/mistake or any major problem, if it's some small bug or issue then directly ping @team", inline=False)
         embed.set_footer(text="🍪 For CashOut Cookie Games\n🔨 For Staff Commands (Only works for team members)")
         helpmsg = await ctx.send(embed=embed)
@@ -25,13 +26,13 @@ class Help(commands.Cog):
         gamesembed.add_field(name="Game", value="Play Cookie Hunt with someone! Guess where opponent's cookies are hidden and find them!", inline=False)
         gamesembed.add_field(name="Requirement", value="Login to [CashOut Cookie](https://cashoutcookie.com) on this server using the command `?login`", inline=False)
         gamesembed.add_field(name="Fee", value="100 cookies from both players.", inline=False)
-        gamesembed.add_field(name="Rewards", value="200 Cookies for Victoey\n150 Cookies if opponent surrenders\n100 Cookies if opponent gets timed out (Not technically a win so fee amount is given back to the winner)", inline=False)
+        gamesembed.add_field(name="Rewards", value="200 Cookies for Victory\n150 Cookies if opponent surrenders\n100 Cookies if opponent gets timed out (Not technically a win so fee amount is given back to the winner)", inline=False)
         gamesembed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
 
 
         embedstaff = discord.Embed(title="Staff commands", color=discord.Colour.teal())
         embedstaff.add_field(name="?embed `<colour>`", value="Answer the questions sent by me to make an embed! \n *Reacting to 🎨 will give all colour values*", inline=False)
-        embedstaff.add_field(name="?cache", value="Shows all auth cookies stored.", inline=False)
+        embedstaff.add_field(name="?cache `<serverid>`", value="Shows auth cookies stored for the server if server id entered, if not entered then shows all auth cookies stored in JSON format.", inline=False)
         embedstaff.add_field(name="?adduser `<cashoutcookieusername>` `<discorduserid>`", value="Adds auth cookies for the user inside the server where the command is triggered", inline=False)
         embedstaff.add_field(name="?removeuser", value="Clears the user's auth cookie from the Discord Server inside which the command is triggered (Logs out).", inline=False)
         embedstaff.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
@@ -63,12 +64,12 @@ class Help(commands.Cog):
             return str(reaction.emoji) == '🍪' or str(reaction.emoji) == '<:delete:810190593338638347>' or str(reaction.emoji) == '🔨' and reaction.message == helpmsg
         reaction, user = await self.bot.wait_for('reaction_add', check=check)
 
-        if str(reaction.emoji) == '🍪':
+        if str(reaction.emoji) == '🍪' and user == ctx.author:
             await helpmsg.edit(embed=gamesembed)
             await helpmsg.clear_reaction('🍪')
             await helpmsg.clear_reaction('🔨')
 
-        elif str(reaction.emoji) == '🔨' and user.guild_permissions.manage_messages:
+        elif str(reaction.emoji) == '🔨' and user.guild_permissions.manage_messages and user == ctx.author:
             await helpmsg.clear_reactions()
             await helpmsg.add_reaction('🎨')
             await helpmsg.add_reaction('<:delete:810190593338638347>')
@@ -76,7 +77,7 @@ class Help(commands.Cog):
         elif str(reaction.emoji) == '🔨' and not user.guild_permissions.manage_messages:
             await ctx.send(f"{user.mention} Sorry but you can't view staff commands as you are not a staff or team member,")
 
-        elif str(reaction.emoji) == '<:delete:810190593338638347>':
+        elif str(reaction.emoji) == '<:delete:810190593338638347>' and user == ctx.author:
             await helpmsg.delete()
 
 
@@ -84,7 +85,7 @@ class Help(commands.Cog):
             return str(reaction.emoji) == '🎨' or str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
         reaction, user = await self.bot.wait_for('reaction_add', check=check)
 
-        if str(reaction.emoji) == '🎨':
+        if str(reaction.emoji) == '🎨' and user == ctx.author:
             await helpmsg.clear_reaction('🎨')
             await helpmsg.edit(embed=embedcolours)
         elif str(reaction.emoji) == '<:delete:810190593338638347>':
