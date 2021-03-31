@@ -80,7 +80,7 @@ class Mod(commands.Cog):
             else:
                 answers.append(msg.content)
     
-        channel = self.bot.get_channel(820700984035770428)
+        channel = self.bot.get_channel(819169184930988032)
         month = answers[0]
         winners = answers[1].split(",")
         desc = answers[2]
