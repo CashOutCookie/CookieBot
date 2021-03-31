@@ -8,7 +8,7 @@ Discord Bot for [CashOut Cookie](https://cashoutcookie.com)
 
 2. Start a virtual environment.
 ```
-bash virtualenv env
+virtualenv env
 ```
 
 3. Clone the repository

@@ -11,6 +11,7 @@ class Mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
  
+
     @commands.command()
     @has_permissions(manage_messages=True)
     async def embed(self, ctx, color=None):
@@ -56,6 +57,50 @@ class Mod(commands.Cog):
             await msgd.delete()
         else:
             await ctx.send("__You must specify a colour value!__\n *React to the 🎨 emoji in staff help message to get all the values*")
+
+
+    @commands.command()
+    @has_permissions(manage_messages=True)
+    async def winners(self, ctx):
+        questions = ["Month?",
+                    "Winners (Use commas to seperate users)",
+                    "Description?"]
+        answers = []
+
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+
+        for i in questions:
+            await ctx.send(i)
+            try: 
+                msg = await self.bot.wait_for('message', timeout=100.0, check=check)
+            except asyncio.TimeoutError:
+                await ctx.send('Command expires after 100 seconds. Be more quick 🦥')
+                return
+            else:
+                answers.append(msg.content)
+    
+        channel = self.bot.get_channel(820700984035770428)
+        month = answers[0]
+        winners = answers[1].split(",")
+        desc = answers[2]
+
+        embed = discord.Embed(title=f'Winners | Month: {month}',
+                            description=desc,
+                            color=discord.Color.gold())
+        embed.set_thumbnail(url = ctx.guild.icon_url)
+        rank = 1
+        for i in winners:
+            embed.add_field(name=f"Rank {rank}", value=i, inline=False)
+            rank += 1
+        await channel.send(embed=embed)
+        msgd = await ctx.send(f'Winners embed sent')
+        await msgd.add_reaction("🗑")
+        await asyncio.sleep(1)
+        def check(reaction, user):
+            return str(reaction.emoji) == '🗑' and reaction.message == msgd
+        reaction, user = await self.bot.wait_for('reaction_add', check=check)
+        await msgd.delete()
 
 
     @commands.command()
