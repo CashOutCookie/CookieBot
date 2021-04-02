@@ -39,6 +39,11 @@ class Help(commands.Cog):
             await helpmsg.clear_reaction('🍪')
         elif str(reaction.emoji) == '<:delete:810190593338638347>' and user == ctx.author:
             await helpmsg.delete()
+        
+        def check(reaction, user):
+            return str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
+        reaction, user = await self.bot.wait_for('reaction_add', check=check)
+        await helpmsg.delete()
 
 
     @commands.command()
