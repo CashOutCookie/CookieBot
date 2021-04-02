@@ -22,6 +22,7 @@ class Help(commands.Cog):
         helpmsg = await ctx.send(embed=embed)
         await helpmsg.add_reaction('🍪')
         await helpmsg.add_reaction('<:delete:810190593338638347>')
+        await asyncio.sleep(1)
 
         gamesembed = discord.Embed(title="Cookie Hunt!", description="```?cookiehunt```", color=discord.Colour.orange())
         gamesembed.add_field(name="Game", value="Play Cookie Hunt with someone! Guess where opponent's cookies are hidden and find them!", inline=False)
