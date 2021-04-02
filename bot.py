@@ -2,7 +2,7 @@ import os, discord
 from pymongo import MongoClient
 from discord.ext import commands, tasks
 
-bot = commands.Bot(command_prefix = '?')
+bot = commands.Bot(command_prefix = '!')
 bot.remove_command('help')
 
 client = MongoClient(os.environ.get("MONGO"))

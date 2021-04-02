@@ -12,18 +12,13 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def emergency(self, ctx):
-        modchannel = self.bot.get_channel(812560533428502531)
-        embed = discord.Embed(title="Spam pinging Team Members started...", color=discord.Color.orange())
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
-        await ctx.send(embed=embed)
-        await modchannel.send("EMERGENCY! SOMEONE NEEDS YOUR HELP <@&819944514558492673>")
-        await modchannel.send(f"<@&819944514558492673> user which used the command is {ctx.author.name} btw")
-        await modchannel.send(f"<@&819944514558492673> this is their id {ctx.author.id}")
-        await modchannel.send(f"<@&819944514558492673> Help them!")
-        await modchannel.send("<@&819944514558492673>")
-        await modchannel.send("<@&819944514558492673>")
-
+    async def idea(self, ctx, *, idea):
+        channel = self.bot.get_channel(820700984035770428)
+        embed = discord.Embed(title=f"{ctx.author.name}'s idea", description=f"This idea came from server **{ctx.author.guild.name}**!", color=discord.Color.teal())
+        embed.add_field(name="Suggestion", value=idea)
+        msg = await channel.send(embed=embed)
+        msg.add_reaction("✅")
+        msg.add_reaction("❌")
 
 def setup(bot):
     bot.add_cog(Commands(bot))

@@ -1,5 +1,8 @@
-import discord, random, asyncio
+import discord
+import asyncio
 from discord.ext import commands
+
+teamids = [477723384495603713, 791950104680071188, 510479576259100672, 283312969931292672, 310186020136026115]
 
 class Help(commands.Cog):
     def __init__(self, bot):
@@ -11,93 +14,44 @@ class Help(commands.Cog):
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
         embed.add_field(name="?source", value="My Github source code!", inline=False)
         embed.add_field(name="?leaderboard", value="Leaderboard for [CashoutCookie](https://cashoutcookie.com/rank)!", inline=False)
-        embed.add_field(name="?profile `<username>`", value="User profile from [CashoutCookie](https://cashoutcookie.com)!\n *While logged in, just entering `?profile` without any username will show you your profile.*", inline=False)
-        embed.add_field(name="?login", value="Use the command to login to [CashoutCookie](https://cashoutcookie.com) here!", inline=False)
-        embed.add_field(name="?logout", value="Use the command to logout of [CashoutCookie](https://cashoutcookie.com) here!", inline=False)
-        embed.add_field(name="?emergency", value="Use this command **only** when there is a huge bug/mistake or any major problem, if it's some small bug or issue then directly ping @team", inline=False)
-        embed.set_footer(text="🍪 For CashOut Cookie Games\n🔨 For Staff Commands (Only works for team members)")
+        embed.add_field(name="?profile `<username>`",value="User profile from [CashoutCookie](https://cashoutcookie.com)!\n *While logged in, just entering `?profile` without any username will show the command user's profile.*", inline=False)
+        embed.add_field(name="?login", value="Use the command to login to [CashoutCookie](https://cashoutcookie.com) in the server!", inline=False)
+        embed.add_field(name="?logout", value="Use the command to logout of [CashoutCookie](https://cashoutcookie.com) in the server!", inline=False)
+        embed.add_field(name="?idea `<youridea>`",value="Use the command to suggest an idea which will be sent in the official [CashOut Cookie Support Server](https://discord.gg/jTCtZ2xv8z)", inline=False)
+        embed.set_footer(text="🍪 For CashOut Cookie Games")
         helpmsg = await ctx.send(embed=embed)
         await helpmsg.add_reaction('🍪')
-        await helpmsg.add_reaction('🔨')
         await helpmsg.add_reaction('<:delete:810190593338638347>')
-        await asyncio.sleep(1)
 
-        gamesembed = discord.Embed(title="Cookie Hunt!", description="```?cookiehunt```",color=discord.Colour.orange())
+        gamesembed = discord.Embed(title="Cookie Hunt!", description="```?cookiehunt```", color=discord.Colour.orange())
         gamesembed.add_field(name="Game", value="Play Cookie Hunt with someone! Guess where opponent's cookies are hidden and find them!", inline=False)
         gamesembed.add_field(name="Requirement", value="Login to [CashOut Cookie](https://cashoutcookie.com) on this server using the command `?login`", inline=False)
         gamesembed.add_field(name="Fee", value="100 cookies from both players.", inline=False)
         gamesembed.add_field(name="Rewards", value="200 Cookies for Victory\n150 Cookies if opponent surrenders\n100 Cookies if opponent gets timed out (Not technically a win so fee amount is given back to the winner)", inline=False)
         gamesembed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
 
-
-        embedstaff = discord.Embed(title="Staff commands", color=discord.Colour.teal())
-        embedstaff.add_field(name="?embed `<colour>`", value="Answer the questions sent by me to make an embed! \n *Reacting to 🎨 will give all colour values*", inline=False)
-        embedstaff.add_field(name="?cache `<serverid>`", value="Shows auth cookies stored for the server if server id entered, if not entered then shows all auth cookies stored in JSON format.", inline=False)
-        embedstaff.add_field(name="?adduser `<cashoutcookieusername>` `<discorduserid>`", value="Adds auth cookies for the user inside the server where the command is triggered", inline=False)
-        embedstaff.add_field(name="?removeuser", value="Clears the user's auth cookie from the Discord Server inside which the command is triggered (Logs out).", inline=False)
-        embedstaff.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
-        embedstaff.set_footer(text="🎨 Embed color values")
-
-
-        embedcolours = discord.Embed(title="All embed colour values", description="Make sure to type the colour values in all lowercase letters.", color=discord.Colour.teal())
-        embedcolours.add_field(name="teal", value="Colour with a value of 0x1abc9c.")
-        embedcolours.add_field(name="green", value="Colour with a value of 0x2ecc71.")
-        embedcolours.add_field(name="blue", value="Colour with a value of 0x3498db.")
-        embedcolours.add_field(name="purple", value="Colour with a value of 0x9b59b6.")
-        embedcolours.add_field(name="magenta", value="Colour with a value of 0xe91e63.")
-        embedcolours.add_field(name="gold", value="Colour with a value of 0xf1c40f.")
-        embedcolours.add_field(name="orange", value="Colour with a value of 0xe67e22.")
-        embedcolours.add_field(name="red", value="Colour with a value of 0xe74c3c.")
-        embedcolours.add_field(name="dark_teal", value="Colour with a value of 0x11806a.")
-        embedcolours.add_field(name="dark_green", value="Colour with a value of 0x1f8b4c.")
-        embedcolours.add_field(name="dark_blue", value="Colour with a value of 0x206694.")
-        embedcolours.add_field(name="dark_purple", value="Colour with a value of 0x71368a.")
-        embedcolours.add_field(name="dark_magenta", value="Colour with a value of 0xad1457.")
-        embedcolours.add_field(name="dark_gold", value="Colour with a value of 0xc27c0e.")
-        embedcolours.add_field(name="dark_orange", value="Colour with a value of 0xa84300.")
-        embedcolours.add_field(name="dark_red", value="Colour with a value of 0x992d22.")
-        embedcolours.add_field(name="light_gray", value="Colour with a value of 0x979c9f.")
-        embedcolours.add_field(name="dark_gray", value="Colour with a value of 0x607d8b.")
-        gamesembed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
-
         def check(reaction, user):
-            return str(reaction.emoji) == '🍪' or str(reaction.emoji) == '<:delete:810190593338638347>' or str(reaction.emoji) == '🔨' and reaction.message == helpmsg
+            return str(reaction.emoji) == '🍪' or str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
         reaction, user = await self.bot.wait_for('reaction_add', check=check)
-
+        
         if str(reaction.emoji) == '🍪' and user == ctx.author:
             await helpmsg.edit(embed=gamesembed)
             await helpmsg.clear_reaction('🍪')
-            await helpmsg.clear_reaction('🔨')
-
-        elif str(reaction.emoji) == '🔨' and user.guild_permissions.manage_messages and user == ctx.author:
-            await helpmsg.clear_reactions()
-            await helpmsg.add_reaction('🎨')
-            await helpmsg.add_reaction('<:delete:810190593338638347>')
-            await helpmsg.edit(embed=embedstaff)
-        elif str(reaction.emoji) == '🔨' and not user.guild_permissions.manage_messages:
-            await ctx.send(f"{user.mention} Sorry but you can't view staff commands as you are not a staff or team member,")
-
         elif str(reaction.emoji) == '<:delete:810190593338638347>' and user == ctx.author:
             await helpmsg.delete()
 
 
-        def check(reaction, user):
-            return str(reaction.emoji) == '🎨' or str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
-        reaction, user = await self.bot.wait_for('reaction_add', check=check)
-
-        if str(reaction.emoji) == '🎨' and user == ctx.author:
-            await helpmsg.clear_reaction('🎨')
-            await helpmsg.edit(embed=embedcolours)
-        elif str(reaction.emoji) == '<:delete:810190593338638347>':
-            await helpmsg.delete()
-
-
-        def check(reaction, user):
-            return str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
-        reaction, user = await self.bot.wait_for('reaction_add', check=check)
-        await helpmsg.delete()
-
+    @commands.command()
+    async def helpteam(self, ctx):    
+        if ctx.author.id in teamids:
+            embedteam = discord.Embed(title="Staff commands", color=discord.Colour.teal())
+            embedteam.add_field(name="?embed `<colour>`",value="Answer the questions sent by me to make an embed! \n *Reacting to 🎨 will give all colour values*", inline=False)
+            embedteam.add_field(name="?cache `<serverid>`",value="Shows auth cookies stored for the server if server id entered, if not entered then shows all auth cookies stored in JSON format.", inline=False)
+            embedteam.add_field(name="?adduser `<cashoutcookieusername>` `<discorduserid>`",value="Adds auth cookies for the user inside the server where the command is triggered", inline=False)
+            embedteam.add_field(name="?removeuser", value="Clears the user's auth cookie from the Discord Server inside which the command is triggered (Logs out).", inline=False)
+            embedteam.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
+            embedteam.set_footer(text="🎨 Embed color values")
+            await ctx.send(embed=embedteam)
 
 def setup(bot):
     bot.add_cog(Help(bot))
-
