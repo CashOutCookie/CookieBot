@@ -13,7 +13,7 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def idea(self, ctx, *, idea):
-        channel = self.bot.get_channel(820700984035770428)
+        channel = self.bot.get_channel(819150553032556574)
         embed = discord.Embed(title=f"{ctx.author.name}'s idea", description=f"This idea came from server **{ctx.author.guild.name}**!", color=discord.Color.teal())
         embed.add_field(name="Suggestion", value=idea)
         msg = await channel.send(embed=embed)
