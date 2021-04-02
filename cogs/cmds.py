@@ -12,16 +12,16 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def idea(self, ctx, *, idea):
-        if idea is None:
-            await ctx.send("You need to describe your idea too! This is the format: ```?idea <YourIdeaDescription>```")
-        else:
+    async def idea(self, ctx, *, ideadesc=None):
+        if ideadesc is not None:
             channel = self.bot.get_channel(819150553032556574)
             embed = discord.Embed(title=f"{ctx.author.name}'s idea", description=f"This idea came from server **{ctx.author.guild.name}**!", color=discord.Color.teal())
-            embed.add_field(name="Suggestion", value=idea)
+            embed.add_field(name="Suggestion", value=ideadesc)
             msg = await channel.send(embed=embed)
             msg.add_reaction("✅")
             msg.add_reaction("❌")
+        else:
+            await ctx.send("You need to describe your idea too! This is the format: ```?idea <YourIdeaDescription>```")
 
 def setup(bot):
     bot.add_cog(Commands(bot))
