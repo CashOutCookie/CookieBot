@@ -21,7 +21,7 @@ class Help(commands.Cog):
         embed.set_footer(text="🍪 For CashOut Cookie Games")
         helpmsg = await ctx.send(embed=embed)
         await helpmsg.add_reaction('🍪')
-        await helpmsg.add_reaction('<:delete:810190593338638347>')
+        await helpmsg.add_reaction('🗑')
         await asyncio.sleep(1)
 
         gamesembed = discord.Embed(title="Cookie Hunt!", description="```?cookiehunt```", color=discord.Colour.orange())
@@ -32,17 +32,17 @@ class Help(commands.Cog):
         gamesembed.set_thumbnail(url="https://cdn.discordapp.com/attachments/807140294764003350/818505400449761351/cookiemoney.png")
 
         def check(reaction, user):
-            return str(reaction.emoji) == '🍪' or str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
+            return str(reaction.emoji) == '🍪' or str(reaction.emoji) == '🗑' and reaction.message == helpmsg
         reaction, user = await self.bot.wait_for('reaction_add', check=check)
         
         if str(reaction.emoji) == '🍪' and user == ctx.author:
             await helpmsg.edit(embed=gamesembed)
             await helpmsg.clear_reaction('🍪')
-        elif str(reaction.emoji) == '<:delete:810190593338638347>' and user == ctx.author:
+        elif str(reaction.emoji) == '🗑' and user == ctx.author:
             await helpmsg.delete()
         
         def check(reaction, user):
-            return str(reaction.emoji) == '<:delete:810190593338638347>' and reaction.message == helpmsg
+            return str(reaction.emoji) == '🗑' and reaction.message == helpmsg
         reaction, user = await self.bot.wait_for('reaction_add', check=check)
         await helpmsg.delete()
 
