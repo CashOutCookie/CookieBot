@@ -18,7 +18,7 @@ AWARD_API = os.environ.get("AWARD_API")
 FEE_API = os.environ.get("FEE_API")
 PROFILE_API = "https://api.cashoutcookie.com/api/profile/"
 
-client = MongoClient(os.environ.get("MONGO"))
+client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
 

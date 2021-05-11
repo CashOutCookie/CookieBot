@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord.ext.commands import has_permissions
 
 teamids = [477723384495603713, 791950104680071188, 510479576259100672, 283312969931292672, 310186020136026115]
-client = MongoClient(os.environ.get("MONGO"))
+client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
 class Mod(commands.Cog):

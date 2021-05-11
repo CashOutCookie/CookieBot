@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
 
-client = MongoClient(os.environ.get("MONGO"))
+client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
 @bot.event
