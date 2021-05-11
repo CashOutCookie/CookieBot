@@ -4,7 +4,7 @@ from discord.ext import commands
 import discord, json, asyncio, os
 
 
-client = MongoClient(os.environ.get("MONGO"))
+client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
 class Auth(commands.Cog):
