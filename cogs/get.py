@@ -10,7 +10,7 @@ class GetAPIData(commands.Cog):
 
     @commands.command()
     async def leaderboard(self, ctx):
-        URL = "https://api.cashoutcookie.com/api/leaderboard/"
+        URL = "https://api.cashoutcookie.com/leaderboard/"
         embed = discord.Embed(title="CashOutCookie Leaderboard",
                               description=f"[Check the full leaderboard here](https://cashoutcookie.com/rank)",
                               color=discord.Colour.teal())
@@ -34,7 +34,7 @@ class GetAPIData(commands.Cog):
     async def profile(self, ctx, *, username=None):
         if username is not None:
             userprofile = username.lower()
-            URL = f"https://api.cashoutcookie.com/api/profile/{userprofile}/"
+            URL = f"https://api.cashoutcookie.com/profile/{userprofile}/"
             async with request("GET", URL, headers={}) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -70,7 +70,7 @@ class GetAPIData(commands.Cog):
             userprofile = self.bot.listcookies.get(
                 str(ctx.author.guild.id)).get(ctx.author.id)
 
-            URL = f"https://api.cashoutcookie.com/api/profile/{userprofile}/"
+            URL = f"https://api.cashoutcookie.com/profile/{userprofile}/"
             async with request("GET", URL, headers={}) as response:
                 if response.status == 200:
                     data = await response.json()
