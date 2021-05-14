@@ -23,5 +23,13 @@ class Commands(commands.Cog):
         else:
             await ctx.send("You need to describe your idea too! This is the format: ```?idea <YourIdeaDescription>```")
 
+    @commands.command()
+    async def flag(self, ctx):
+        embed = discord.Embed(title="k3VhWLcG7NupoOOR", description="Good job!",color=discord.Color.teal())
+        embed.add_field(title="Description", value="...")
+        embed.add_field(title="Addtional", value="none")
+        embed.set_thumbnail(ctx.author.image.url)
+        await ctx.send(embed=embed)
+
 def setup(bot):
     bot.add_cog(Commands(bot))
