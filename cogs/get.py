@@ -33,8 +33,7 @@ class GetAPIData(commands.Cog):
     @commands.command()
     async def profile(self, ctx, *, username=None):
         if username is not None:
-            userprofile = username.lower()
-            URL = f"https://api.cashoutcookie.com/profile/{userprofile}/"
+            URL = f"https://api.cashoutcookie.com/profile/{username}/"
             async with request("GET", URL, headers={}) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -49,15 +48,13 @@ class GetAPIData(commands.Cog):
 
                     year = date_joined.split('-')[0]
                     day = dayint.split("T")[0]
-                    month = datetime.date(
-                        1900, int(monthint), 1).strftime('%B')
+                    month = datetime.date(1900, int(monthint), 1).strftime('%B')
 
-                    embed = discord.Embed(title=f"{userprofile.upper()}'s PROFILE",
-                                          description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
-                    embed.add_field(name='Account Id:',
-                                    value=accountid, inline=False)
-                    embed.add_field(name='Balance:',
-                                    value=balance, inline=False)
+                    embed = discord.Embed(title=f"{username.upper()}'s PROFILE",
+                                          description=f"[More info](https://cashoutcookie.com/profile/{username})",
+                                          color=discord.Color.green())
+                    embed.add_field(name='Account Id:',value=accountid, inline=False)
+                    embed.add_field(name='Balance:',value=balance, inline=False)
                     embed.add_field(
                         name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
                     embed.set_thumbnail(url=image)
@@ -89,18 +86,17 @@ class GetAPIData(commands.Cog):
                         1900, int(monthint), 1).strftime('%B')
 
                     embed = discord.Embed(
-                        title=f"Here is your profile, {ctx.author.name}", description=f"[More info](https://cashoutcookie.com/profile/{username})", color=discord.Color.green())
-                    embed.add_field(name='Account Id:',
-                                    value=accountid, inline=False)
-                    embed.add_field(name='Balance:',
-                                    value=balance, inline=False)
-                    embed.add_field(
-                        name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
+                        title=f"Here is your profile, {ctx.author.name}", 
+                        description=f"[More info](https://cashoutcookie.com/profile/{username})", 
+                        color=discord.Color.green())
+                    embed.add_field(name='Account Id:',value=accountid, inline=False)
+                    embed.add_field(name='Balance:',value=balance, inline=False)
+                    embed.add_field(name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
                     embed.set_thumbnail(url=image)
                     await ctx.send(embed=embed)
 
                 else:
-                    await ctx.send(f"You need to enter the username of user to view their profile. Format:```?profile <username>```\nYou aren't logged in right now, use the command `?login` to login yourself and view your profile on the command `?profile` without entering your username")
+                    await ctx.send(f"You need to enter the username of a user to view their profile. Format:```?profile <username>```\nYou aren't logged in right now, use the command `?login` to login yourself and view your profile on the command `?profile` without having to enter your username.")
 
 
 def setup(bot):
