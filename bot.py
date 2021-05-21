@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
 
-client = MongoClient("mongodb://mongo:O4gluolSFsk5ZDGa7q1w@containers-us-west-5.railway.app:5790")
+client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
 @bot.event
@@ -34,4 +34,4 @@ for filename in os.listdir('./cogs'):
         
 
 token = os.environ.get('TOKEN')
-bot.run("ODE5NTg5NzM5ODkwODY4MjQ1.YEo0bQ.c4o3fbjnRpOjOVNsXd7Sf-saf08")
+bot.run(token)
