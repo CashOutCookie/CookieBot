@@ -32,71 +32,44 @@ class GetAPIData(commands.Cog):
 
     @commands.command()
     async def profile(self, ctx, *, username=None):
-        if username is not None:
-            URL = f"https://api.cashoutcookie.com/profile/{username}/"
-            async with request("GET", URL, headers={}) as response:
-                if response.status == 200:
-                    data = await response.json()
+        if username is None:
+            try:
+                username = self.bot.listcookies.get(str(ctx.author.guild.id)).get(ctx.author.id)
+                return username
+            except AttributeError:
+                username = None
+                await ctx.send("You aren't logged in right now so you can't view your profile with just `?profile` however you can add anyone's username afterwards to see their profile (including yours!)")
+                return username
 
-                    accountid = data['accountid']
-                    balance = data['balance']
-                    image = data['image']
-                    date_joined = data['date_joined']
+            
+        async with request("GET", f"https://api.cashoutcookie.com/profile/{username}/", headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+                accountid = data['accountnumber']
+                balance = data['balance']
+                image = data['image']
+                date_joined = data['date_joined']
 
-                    monthint = date_joined.split('-')[1]
-                    dayint = date_joined.split('-')[2]
+                monthint = date_joined.split('-')[1]
+                dayint = date_joined.split('-')[2]
 
-                    year = date_joined.split('-')[0]
-                    day = dayint.split("T")[0]
-                    month = datetime.date(1900, int(monthint), 1).strftime('%B')
+                year = date_joined.split('-')[0]
+                day = dayint.split("T")[0]
+                month = datetime.date(1900, int(monthint), 1).strftime('%B')
 
-                    embed = discord.Embed(title=f"{username.upper()}'s PROFILE",
-                                          description=f"[More info](https://cashoutcookie.com/profile/{username})",
-                                          color=discord.Color.green())
-                    embed.add_field(name='Account Id:',value=accountid, inline=False)
-                    embed.add_field(name='Balance:',value=balance, inline=False)
-                    embed.add_field(
-                        name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
-                    embed.set_thumbnail(url=image)
-                    await ctx.send(embed=embed)
+                embed = discord.Embed(title=f"{username.upper()}'s PROFILE",
+                                        description=f"[More info](https://cashoutcookie.com/profile/{username})",
+                                        color=discord.Color.green())
+                embed.add_field(name='Account Id:',value=accountid, inline=False)
+                embed.add_field(name='Balance:',value=balance, inline=False)
+                embed.add_field(
+                    name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
+                embed.set_thumbnail(url=image)
+                await ctx.send(embed=embed)
 
-                else:
-                    await ctx.send(f"The user **'{username}'** doesn't exist.")
+            else:
+                await ctx.send(f"The user **'{username}'** doesn't exist.")
 
-        elif username is None:
-            userprofile = self.bot.listcookies.get(
-                str(ctx.author.guild.id)).get(ctx.author.id)
-
-            URL = f"https://api.cashoutcookie.com/profile/{userprofile}/"
-            async with request("GET", URL, headers={}) as response:
-                if response.status == 200:
-                    data = await response.json()
-
-                    accountid = data['accountid']
-                    balance = data['balance']
-                    image = data['image']
-                    date_joined = data['date_joined']
-
-                    monthint = date_joined.split('-')[1]
-                    dayint = date_joined.split('-')[2]
-
-                    year = date_joined.split('-')[0]
-                    day = dayint.split("T")[0]
-                    month = datetime.date(
-                        1900, int(monthint), 1).strftime('%B')
-
-                    embed = discord.Embed(
-                        title=f"Here is your profile, {ctx.author.name}", 
-                        description=f"[More info](https://cashoutcookie.com/profile/{username})", 
-                        color=discord.Color.green())
-                    embed.add_field(name='Account Id:',value=accountid, inline=False)
-                    embed.add_field(name='Balance:',value=balance, inline=False)
-                    embed.add_field(name='Date Joined:', value=f"{year} {month} {day[:17]}", inline=False)
-                    embed.set_thumbnail(url=image)
-                    await ctx.send(embed=embed)
-
-                else:
-                    await ctx.send(f"You need to enter the username of a user to view their profile. Format:```?profile <username>```\nYou aren't logged in right now, use the command `?login` to login yourself and view your profile on the command `?profile` without having to enter your username.")
 
 
 def setup(bot):

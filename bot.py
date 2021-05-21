@@ -5,12 +5,12 @@ from discord.ext import commands, tasks
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
 
-client = MongoClient(os.environ.get("MONGO_URL"))
+client = MongoClient("mongodb://mongo:O4gluolSFsk5ZDGa7q1w@containers-us-west-5.railway.app:5790")
 db = client['discord']
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="https://cashoutcookie.com | ?help"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="?help | Special command in DMs 👀"))
     print("I'm Ready!")
 
 
@@ -34,4 +34,4 @@ for filename in os.listdir('./cogs'):
         
 
 token = os.environ.get('TOKEN')
-bot.run(token)
+bot.run("ODE5NTg5NzM5ODkwODY4MjQ1.YEo0bQ.c4o3fbjnRpOjOVNsXd7Sf-saf08")

@@ -24,12 +24,13 @@ class Commands(commands.Cog):
             await ctx.send("You need to describe your idea too! This is the format: ```?idea <YourIdeaDescription>```")
 
     @commands.command()
-    async def flag(self, ctx, *, ideadesc=None):
-        embed = discord.Embed(title="k3VhWLcG7NupoOOR", description="Good job!",color=discord.Color.teal())
-        embed.add_field(name="Description", value="...")
-        embed.add_field(name="Addtional", value="none")
-        embed.set_thumbnail(url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
+    async def flag(self, ctx):
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            embed = discord.Embed(title="k3VhWLcG7NupoOOR", description="Good job!",color=discord.Color.teal())
+            embed.add_field(name="Description", value="Now enter this in flag at [CashOut Cookie](https://cashoutcookie.com/ctf) to proceed!")
+            embed.add_field(name="Addtional", value="none")
+            embed.set_thumbnail(url=ctx.author.avatar_url)
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Commands(bot))
