@@ -2,6 +2,9 @@ import discord
 import datetime
 from aiohttp import request
 from discord.ext import commands
+from pymongo import MongoClient
+client = MongoClient(os.environ.get("MONGO_URL"))
+db = client['discord']
 
 
 class GetAPIData(commands.Cog):
@@ -34,7 +37,7 @@ class GetAPIData(commands.Cog):
     async def profile(self, ctx, *, username=None):
         if username is None:
             try:
-                username = self.bot.listcookies.get(str(ctx.author.guild.id)).get(ctx.author.id)
+                username = db.get_collection(str(ctx.guild.id)).find_one({"_id": ctx.author.id}).get("username")
                 return username
             except AttributeError:
                 username = None

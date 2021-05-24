@@ -377,12 +377,13 @@ class CookieHunt(commands.Cog):
     @commands.group(invoke_without_command=True)
     @commands.guild_only()
     async def cookiehunt(self, ctx: commands.Context) -> None:
-        if self.bot.listcookies.get(str(ctx.author.guild.id)).get(ctx.author.id) != None:
+        guildcollection = db.get_collection(str(ctx.guild.id))
+        if guildcollection is not None and guildcollection.find_one({"_id": ctx.author.id}) is not None:
             await ctx.send("Checking balance...")
 
-            cmdauthor = self.bot.listcookies.get(
-                str(ctx.author.guild.id)).get(ctx.author.id)
-            async with request("GET", PROFILE_API+cmdauthor) as response:
+            cmdauthor = guildcollection.find_one({"_id"})
+
+            async with request("GET", PROFILE_API+cmdauthor.get("username")) as response:
                 if response.status == 200:
                     data = await response.json()
                     if 100 > data['balance']:
@@ -431,12 +432,12 @@ class CookieHunt(commands.Cog):
                         try:
                             game = Game(self.bot, ctx.channel,
                                         ctx.author, user)
-                            if self.bot.listcookies.get(str(user.guild.id)).get(user.id) == None:
+                            if guildcollection.find_one({"_id": ctx.author.id}) == None:
                                 await ctx.send(f"You need to login to play {user.mention}.\n Use the command `?login` to login to CashOut Cookie.\n {ctx.author.mention} Game got cancelled because {user.name} tried to play without logging in, Blame him not me lel, anyways you gotta start again.")
                             else:
-                                reactor = self.bot.listcookies.get(
-                                    str(user.guild.id)).get(user.id)
-                                async with request("GET", PROFILE_API+reactor) as response:
+                                
+                                reactor = guildcollection.find_one({"_id": user.id})
+                                async with request("GET", PROFILE_API+reactor.get("username")) as response:
                                     if response.status == 200:
                                         data = await response.json()
                                         if 100 > data['balance']:
@@ -456,16 +457,14 @@ class CookieHunt(commands.Cog):
                             await ctx.send(f"{ctx.author.mention} {user.mention} An error occurred. Game failed\n 100 cookies have been credited back to both of your accounts.")
                             self.games.remove(game)
 
-                            authorguy = self.bot.listcookies.get(
-                                str(ctx.author.guild.id)).get(ctx.author.id)
-                            data = {"username": authorguy, "amount": "100"}
+                            authorguy = guildcollection.find_one({"_id": ctx.author.id})
+                            data = {"username": authorguy.get("username"), "amount": "100"}
                             credentials = json.dumps(data)
                             async with request("POST", FEE_API, data=credentials, headers={'Content-type': 'application/json', 'Accept': 'application/json'}) as response:
                                 pass
 
-                            userguy = self.bot.listcookies.get(
-                                str(user.guild.id)).get(user.id)
-                            data = {"username": userguy, "amount": "100"}
+                            userguy = guildcollection.find_one({"_id": user.id})
+                            data = {"username": userguy.get("username"), "amount": "100"}
                             credentials = json.dumps(data)
                             async with request("POST", FEE_API, data=credentials, headers={'Content-type': 'application/json', 'Accept': 'application/json'}) as response:
                                 pass

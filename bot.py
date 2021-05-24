@@ -5,28 +5,11 @@ from discord.ext import commands, tasks
 bot = commands.Bot(command_prefix = '?')
 bot.remove_command('help')
 
-client = MongoClient(os.environ.get("MONGO_URL"))
-db = client['discord']
-
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="?help | Special command in DMs 👀"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="?help | Special command in my DMs 👀"))
     print("I'm Ready!")
 
-
-
-@tasks.loop(seconds = 2)
-async def myLoop():
-    bot.listcookies = {}
-    for server in db.list_collection_names():
-        collection = db[server]
-        cookieList = {}
-        for user in collection.find():
-            cookieList[user["discordId"]] = user["username"]
-        bot.listcookies[server] = cookieList
-
-
-myLoop.start()
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
@@ -34,4 +17,4 @@ for filename in os.listdir('./cogs'):
         
 
 token = os.environ.get('TOKEN')
-bot.run(token)
+bot.run("ODE5NTg5NzM5ODkwODY4MjQ1.YEo0bQ.18ZerFO2FUXwO0NAgU6dN1L6NcM")
