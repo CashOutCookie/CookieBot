@@ -3,6 +3,8 @@ import datetime
 from aiohttp import request
 from discord.ext import commands
 from pymongo import MongoClient
+import os 
+
 client = MongoClient(os.environ.get("MONGO_URL"))
 db = client['discord']
 
