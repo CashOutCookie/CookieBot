@@ -7,7 +7,7 @@ bot.remove_command('help')
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="?help | Special command in my DMs 👀"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="?help"))
     print("I'm Ready!")
 
 
