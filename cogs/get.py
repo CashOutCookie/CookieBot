@@ -38,18 +38,16 @@ class GetAPIData(commands.Cog):
     @commands.command()
     async def sus_response(self, ctx):
         await ctx.send(db.get_collection(str(ctx.guild.id)).find_one({"_id":ctx.author.id}))
+    
     @commands.command()
     async def profile(self, ctx, *, username=None):
         if username is None:
             try:
                 username = db.get_collection(str(ctx.guild.id)).find_one({"_id": ctx.author.id}).get("username")
-                return username
             except AttributeError:
-                username = None
-                await ctx.send("You aren't logged in right now so you can't view your profile with just `?profile` however you can add anyone's username afterwards to see their profile (including yours!)")
-                return username
-
-            
+                return await ctx.send("You aren't logged in right now so you can't view your profile with just `?profile` however you can add anyone's username afterwards to see their profile (including yours!)")
+        else:
+            username = username  
         async with request("GET", f"https://api.cashoutcookie.com/profile/{username}/", headers={}) as response:
             if response.status == 200:
                 data = await response.json()
