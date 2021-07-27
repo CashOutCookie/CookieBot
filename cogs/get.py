@@ -36,6 +36,9 @@ class GetAPIData(commands.Cog):
                 await ctx.send(f"Something went wrong, API returned a {response.status} response 😶")
 
     @commands.command()
+    async def sus_response(self, ctx):
+        await ctx.send(db.get_collection(str(ctx.guild.id)).find_one({"_id":ctx.author.id}))
+    @commands.command()
     async def profile(self, ctx, *, username=None):
         if username is None:
             try:
